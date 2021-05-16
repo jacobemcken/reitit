@@ -49,6 +49,14 @@
   [:div
    [:h1 "This is sub-page 2"]])
 
+(defn query-params-test []
+  [:div
+   [:h1 "This is query params test page"]
+   [:span "See console log for output of params"][:br]
+   [:a {:href "/#/query-params-test?test=something"} "Works but not a valid URL"][:br]
+   [:a {:href "/?test=something#/query-params-test"} "Does not work but is a valid URL"]
+   ])
+
 ;;; Effects ;;;
 
 ;; Triggering navigation from events.
@@ -93,7 +101,17 @@
      :link-text "Sub-page 2"
      :controllers
      [{:start (fn [& params] (js/console.log "Entering sub-page 2"))
-       :stop  (fn [& params] (js/console.log "Leaving sub-page 2"))}]}]])
+       :stop  (fn [& params] (js/console.log "Leaving sub-page 2"))}]}]
+   ["query-params-test"
+    {:name      ::query-params-test
+     :view      query-params-test
+     :link-text "Query params test"
+     :controllers
+     [{:parameters {:query [:test]}
+       :start (fn [& params]
+                (js/console.log "Entering query params test")
+                (println params))
+       :stop  (fn [& params] (js/console.log "Leaving query params test"))}]}]])
 
 (defn on-navigate [new-match]
   (when new-match
